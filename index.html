@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>AI Chatbot</title>
     <style>
         * {
             padding: 0;
@@ -172,9 +172,7 @@
             <b style="background: linear-gradient(to right, #FF9C9C, #878BF3); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ai</b>&nbsp;Chatbot
         </section>
         <section id="middle">
-            <div id="chatbox-wrapper">
-                
-            </div>
+            <div id="chatbox-wrapper"></div>
         </section>
         <section id="bottom">
             <div id="input-wrapper">
@@ -183,66 +181,70 @@
                     contenteditable="true" 
                     role="textbox" 
                     aria-multiline="true"
-                    aria-placeholder="Whats on your mind?"
+                    aria-placeholder="What's on your mind?"
                 ></div>
-                
-                <button onclick="alertd()">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 24 24" width="30px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
+                <button onclick="handleChat()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 24 24" width="30px" fill="#e8eaed">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/>
+                    </svg>
                 </button>
             </div>
         </section>
     </main>
     <script>
+        async function handleChat() {
+            const chatarea = document.getElementById("chatbox-wrapper");
+            const inputField = document.getElementsByClassName("input-field")[0];
+            const inputData = inputField.textContent.trim();
 
-function alertd() {
-    const chatarea = document.getElementById("chatbox-wrapper");
-    const inputField = document.getElementsByClassName("input-field")[0];
-    const inputData = inputField.textContent;
+            if (!inputData) return;
 
-    // Create a new div element
-    const newDiv = document.createElement("div");
+            // Display user message
+            const userDiv = document.createElement("div");
+            userDiv.innerHTML = inputData;
+            userDiv.id = "propmt";
+            chatarea.appendChild(userDiv);
+            chatarea.scrollTop = chatarea.scrollHeight;
 
-    // Set the innerHTML to inputData
-    newDiv.innerHTML = inputData;
+            // Clear input field
+            inputField.textContent = "";
 
-    // Set the ID to "propmt"
-    newDiv.id = "propmt";
+            // Fetch response from Gemini API
+            try {
+                const response = await  fetch("https://ai-chatbot-apiend.vercel.app/api/gemini/admin", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "input" : inputData
+                    }),
+                    redirect: "follow"
+                });
 
-    // Append the new div to the chat area
-    chatarea.appendChild(newDiv);
+                const data = await response.json();
 
-    // Anchor scroll to the bottom
-    chatarea.scrollTop = chatarea.scrollHeight;
+                // Extract the response text
+                const geminiReply = data || "none"
 
-    // Clear the input field
-    inputField.textContent = "";
+                // Display Gemini response
+                const geminiDiv = document.createElement("div");
+                geminiDiv.innerHTML = geminiReply;
+                geminiDiv.id = "msg";
+                chatarea.appendChild(geminiDiv);
+                chatarea.scrollTop = chatarea.scrollHeight;
+            } catch (error) {
+                console.error("Error fetching Gemini response:", error);
 
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * max);
-    }
-
-    setTimeout(() => {
-        const newDiv = document.createElement("div");
-
-        const responses = [
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi consequatur ducimus sapiente eaque quas? Quisquam nostrum inventore temporibus, labore nesciunt, sit enim molestias dolorum cumque voluptatum quae illo vitae neque.",
-            "Thank you!"
-        ];
-
-        // Set the innerHTML to a random response
-        newDiv.innerHTML = responses[getRandomInt(responses.length)];
-
-        // Set the ID to "msg"
-        newDiv.id = "msg";
-
-        // Append the new div to the chat area
-        chatarea.appendChild(newDiv);
-
-        // Anchor scroll to the bottom
-        chatarea.scrollTop = chatarea.scrollHeight;
-    }, 2000);
-}
-
+                // Fallback error message
+                const errorDiv = document.createElement("div");
+                errorDiv.innerHTML = "An error occurred while fetching the response.";
+                errorDiv.id = "msg";
+                chatarea.appendChild(errorDiv);
+                chatarea.scrollTop = chatarea.scrollHeight;
+            }
+        }
     </script>
 </body>
 </html>
