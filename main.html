@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family:sans-serif;
+            color: #fff;
+            line-height: 22px;
+        }
+        body {
+            background-color: #1C1D1D;
+        }
+        main {
+            width: 100vw;
+            height: 100vh;
+            background-color: #1C1D1D;
+            display: flex;
+            flex-direction: column;
+        }
+        #top {
+            width: 100%;
+            height: 8%;
+            position: relative;
+            top: 0;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        #middle {
+            width: 100%;
+            height: 80%;
+            position: relative;
+            top: 0;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            
+        }
+        #bottom {
+            width: 100%;
+            min-height: 12%;
+            max-height: 30%;
+            position: relative;
+            bottom: 0;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #input-wrapper {
+            width: 70%;
+            min-height: 60%;
+            max-height: 100%;
+            background-color:#242527;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            border-radius: 7px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .input-field:empty:before {
+            content: "What's on your mind ?";
+            color: #8e8e8e;
+        }
+        .input-field {
+            border: none;
+            outline: none;
+            color: white;
+            font-size: larger;
+            width: 90%;
+            height: 100%;
+            font-family:sans-serif;
+        }
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            border: none;
+        }
+        button:hover {
+            cursor: pointer;
+        }
+
+        #chatbox-wrapper {
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer and Edge */
+            color: white;
+            width: 70%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            
+        }
+        #chatbox-wrapper::-webkit-scrollbar {
+            width: 0px; /* Chrome, Safari, and Opera */
+        }
+        #propmt {
+            width: 100%;
+            min-height: 40px;
+            position: relative;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            border-width: 0px 3px 0px 0px;
+            border-style: solid;
+            border-image: linear-gradient(to bottom, #ED99A9, #9E8EE3) 1;
+            padding-right: 12px;
+        }
+
+        #msg {
+            max-width: fit-content;
+            margin-right: 20%;
+            min-height: max-content;
+            max-height: max-content;
+            position: relative;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            background-color: #242527;
+            padding: 18px 20px;
+            border-radius: 15px;
+        }
+        @keyframes inwardAnimation {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #msg {
+            animation: inwardAnimation 0.3s ease-in-out;
+        }
+        @media (max-width: 768px) {
+            #input-wrapper {
+                width: 85%;
+                padding: 0 10px;
+            }
+            #chatbox-wrapper {
+            width: 85%;
+            }
+            main {
+                height: 90vh;
+            }
+            #msg {
+                margin-right: 5%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <main>
+        <section id="top">
+            <b style="background: linear-gradient(to right, #FF9C9C, #878BF3); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ai</b>&nbsp;Chatbot
+        </section>
+        <section id="middle">
+            <div id="chatbox-wrapper">
+                
+            </div>
+        </section>
+        <section id="bottom">
+            <div id="input-wrapper">
+                <div            
+                    class="input-field" 
+                    contenteditable="true" 
+                    role="textbox" 
+                    aria-multiline="true"
+                    aria-placeholder="Whats on your mind?"
+                ></div>
+                
+                <button onclick="alertd()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 24 24" width="30px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
+                </button>
+            </div>
+        </section>
+    </main>
+    <script>
+
+function alertd() {
+    const chatarea = document.getElementById("chatbox-wrapper");
+    const inputField = document.getElementsByClassName("input-field")[0];
+    const inputData = inputField.textContent;
+
+    // Create a new div element
+    const newDiv = document.createElement("div");
+
+    // Set the innerHTML to inputData
+    newDiv.innerHTML = inputData;
+
+    // Set the ID to "propmt"
+    newDiv.id = "propmt";
+
+    // Append the new div to the chat area
+    chatarea.appendChild(newDiv);
+
+    // Anchor scroll to the bottom
+    chatarea.scrollTop = chatarea.scrollHeight;
+
+    // Clear the input field
+    inputField.textContent = "";
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    setTimeout(() => {
+        const newDiv = document.createElement("div");
+
+        const responses = [
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi consequatur ducimus sapiente eaque quas? Quisquam nostrum inventore temporibus, labore nesciunt, sit enim molestias dolorum cumque voluptatum quae illo vitae neque.",
+            "Thank you!"
+        ];
+
+        // Set the innerHTML to a random response
+        newDiv.innerHTML = responses[getRandomInt(responses.length)];
+
+        // Set the ID to "msg"
+        newDiv.id = "msg";
+
+        // Append the new div to the chat area
+        chatarea.appendChild(newDiv);
+
+        // Anchor scroll to the bottom
+        chatarea.scrollTop = chatarea.scrollHeight;
+    }, 2000);
+}
+
+    </script>
+</body>
+</html>
