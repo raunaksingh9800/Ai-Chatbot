@@ -13,7 +13,7 @@ A Simple Ai Chatbot using Gemini flash model
 
 #### Get GEMINI API
 
-```http
+```link
 https://ai.google.dev/gemini-api/docs
 ```
 
